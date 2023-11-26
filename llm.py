@@ -1,12 +1,12 @@
-from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
+from langchain.prompts import PromptTemplate
 from langchain.llms import Ollama
+from langchain.chains import ConversationChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import LLMResult
-import os
-        
+
 
 def initialize_model():
     template = """
@@ -60,11 +60,9 @@ AI:
         callback_manager=callback_manager,
     )
 
-    # llm=OpenAI(temperature=0.99, max_tokens=750), 
+    # llm=OpenAI(temperature=0.99, max_tokens=750),
 
-    prompt = PromptTemplate(
-        template=template, input_variables=['history', 'input']
-    )
+    prompt = PromptTemplate(template=template, input_variables=["history", "input"])
 
     chatgpt_chain = ConversationChain(
         llm=llm,

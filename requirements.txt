@@ -1,6 +1,7 @@
 langchain
-openai
+# openai
 Pillow
-stability-sdk
+# stability-sdk
 streamlit
 streamlit-extras
+webuiapi
