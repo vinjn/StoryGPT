@@ -11,7 +11,6 @@ from imageGen import *
 
 # Creating API Authentication functions
 def auth():    
-    os.environ['OPENAI_API_KEY'] = st.session_state.openai_api_key
     os.environ['STABILITY_KEY'] = st.session_state.dreamstudio_api_key
     
     st.session_state.genreBox_state = False
@@ -41,8 +40,6 @@ if 'genreBox_state' not in st.session_state:
     st.session_state['genreBox_state'] = True
 if 'apiBox_state' not in st.session_state:
     st.session_state['apiBox_state'] = False
-if 'openai_api_key' not in st.session_state:
-    st.session_state['openai_api_key'] = ''
 if 'dreamstudio_api_key' not in st.session_state:
     st.session_state['dreamstudio_api_key'] = ''
 if 'genre_input' not in st.session_state:
@@ -64,13 +61,6 @@ with st.sidebar:
     
     # Sidebar Form, wherein the user enters their API Keys. [Completed]
     with st.form(key='API Keys'):
-        openai_key = st.text_input(
-            label='Your OpenAI API Key', 
-            key='openai_api_key',
-            type='password',
-            disabled=st.session_state.apiBox_state,
-            help='You can create your own OpenAI API key by going to https://platform.openai.com/account/api-keys (Sign up required)'
-        )
         dreamstudio_key = st.text_input(
             label='Your Stability.AI API Key', 
             key='dreamstudio_api_key',
@@ -87,8 +77,6 @@ with st.sidebar:
     st.info('**Note:** You can close the sidebar when you enter the API keys')
 
 # Displaying the API Key warnings
-if not openai_key.startswith('sk-'): 
-    st.warning('Please enter your OpenAI API Key to start StoryGPT', icon='⚠')
 if not dreamstudio_key.startswith('sk-'):
     st.warning('Please enter your Stability.AI API Key to start StoryGPT', icon='⚠')
 

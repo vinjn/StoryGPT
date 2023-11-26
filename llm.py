@@ -1,5 +1,10 @@
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
+from langchain.llms import Ollama
+from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.memory import ConversationBufferWindowMemory
+from langchain.callbacks.base import BaseCallbackHandler
+from langchain.schema import LLMResult
 import os
         
 
@@ -40,14 +45,31 @@ Human: {input}
 AI:
     """
 
+    class GenerationStatisticsCallback(BaseCallbackHandler):
+        def on_llm_end(self, response: LLMResult, **kwargs) -> None:
+            print(response.generations[0][0].generation_info)
+
+    callback_manager = CallbackManager(
+        [StreamingStdOutCallbackHandler(), GenerationStatisticsCallback()]
+    )
+
+    llm = Ollama(
+        base_url="http://localhost:11434",
+        model="llama2",
+        verbose=True,
+        callback_manager=callback_manager,
+    )
+
+    # llm=OpenAI(temperature=0.99, max_tokens=750), 
+
     prompt = PromptTemplate(
         template=template, input_variables=['history', 'input']
     )
 
     chatgpt_chain = ConversationChain(
-        llm=OpenAI(temperature=0.99, max_tokens=750), 
-        prompt=prompt, 
+        llm=llm,
+        prompt=prompt,
         memory=ConversationBufferWindowMemory(),
     )
-    
+
     return chatgpt_chain
